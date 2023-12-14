@@ -1,0 +1,66 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchDataAndDrawChart();
+        });
+
+        function fetchDataAndDrawChart() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    const intensityData = data.map(entry => entry.intensity);
+                    const likelihoodData = data.map(entry => entry.likelihood);
+                    const relevanceData = data.map(entry => entry.relevance);
+
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: intensityData,
+                            datasets: [{
+                                label: 'Intensity',
+                                data: intensityData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Likelihood',
+                                data: likelihoodData,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Relevance',
+                                data: relevanceData,
+                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
